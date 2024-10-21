@@ -1,3 +1,12 @@
+/*
+ * This ESP32 code is created by esp32io.com
+ *
+ * This ESP32 code is released in the public domain
+ *
+ * For more detail (instruction and wiring diagram), visit https://esp32io.com/tutorials/esp32-ws2812b-led-strip
+ */
+
+#include <Adafruit_NeoPixel.h>
 #include <WiFiUdp.h>
 #include <Arduino.h>
 #include <PubSubClient.h>
@@ -7,7 +16,8 @@
 const int led = 2; // pin for onboard LED
 const int flash = 0; // pin for "FLASH" button
 const int testIO = 5;
-const int testIOIn = 4; // pin for testing INPUT 
+#define PIN_WS2812B 3  // The ESP32 pin GPIO16 connected to WS2812B
+#define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
 // WiFi Config
 const char* ssid = "rpi-hub";
@@ -21,8 +31,10 @@ const char* topic = "light1";
 const char* client = "TEST";
 WiFiClient espClient;
 PubSubClient mqtt(mqtt_server, 1883, 0, espClient);
-String searchMessage = "on"; //String that holds what function the ESP will be. 
-//I.E. LED for LED, Light1 for Light1, etc.
+
+
+
+Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 
 
 // Reconnects the WiFi and MQTT if disconnected
@@ -45,6 +57,18 @@ void reconnect() {
   }
 }
 
+void Lights(int state, String color) {
+  if (state == 0) {
+    ws2812b.clear();
+    ws2812b.show();
+  }
+  if (state == 1) {
+    ws2812b.clear();
+    ws2812b.fill(1111, 0, 0);
+    ws2812b.show();
+  }
+}
+
 //
 String messageReceived(char* topic, byte* payload, unsigned int length) {
   String message = "";
@@ -53,24 +77,19 @@ String messageReceived(char* topic, byte* payload, unsigned int length) {
   }
   // Setup for if message comes, write to output pin
   Serial.println(message);
-  if (message = searchMessage) {
-    digitalWrite(led, LOW);
-    digitalWrite(testIO, HIGH);
-    delay(1000);
-    digitalWrite(led, HIGH);
-    digitalWrite(testIO, LOW);
+  if (message == "on") {
+    Lights(1, "white");
+  }
+  if (message == "off") {
+    Lights(0, "");
   }
   return message;
 }
 
-
-void setup() {   
-  // initialize inbuilt LED pin as an output.
-  pinMode(led, OUTPUT);
-  pinMode(flash, INPUT);
-  pinMode(testIO, OUTPUT);
-  pinMode(testIOIn, INPUT);
-  WiFi.mode(WIFI_AP);
+void setup() {
+  Serial.begin(9600);
+  ws2812b.begin();
+  WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, wifiPassword);
   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
     Serial.println("Connection Failed");
@@ -85,10 +104,8 @@ void setup() {
 
 }
 
-
-// loop function runs over and over  again forever
 void loop() {
-  //Initial Connection to MQTT server
+    //Initial Connection to MQTT server
   if (mqtt_server!="") {
     if(!mqtt.connected()) {
       Serial.println("MQTT Reconnecting");
@@ -104,12 +121,4 @@ void loop() {
     mqtt.publish(topic, "test positive");
     delay(1000);
   }
-  // If pin is off, send a message
-  // Issue where it randomly sends signal every once in a while
-  // could be fixed with testing
-  if (digitalRead(testIOIn) == LOW) {
-    mqtt.publish(topic, "test GPIO Input positive");
-    delay(1000);
-  }
-
 }
