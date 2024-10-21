@@ -57,6 +57,13 @@ void reconnect() {
   }
 }
 
+uint32_t getColor(String color) {
+  if (color == "red") {
+    return 16777215;
+  }
+  return 1111;
+}
+
 void Lights(int state, String color) {
   if (state == 0) {
     ws2812b.clear();
@@ -64,7 +71,7 @@ void Lights(int state, String color) {
   }
   if (state == 1) {
     ws2812b.clear();
-    ws2812b.fill(1111, 0, 0);
+    ws2812b.fill(getColor(color), 0, 0);
     ws2812b.show();
   }
 }
@@ -78,7 +85,7 @@ String messageReceived(char* topic, byte* payload, unsigned int length) {
   // Setup for if message comes, write to output pin
   Serial.println(message);
   if (message == "on") {
-    Lights(1, "white");
+    Lights(1, "red");
   }
   if (message == "off") {
     Lights(0, "");
