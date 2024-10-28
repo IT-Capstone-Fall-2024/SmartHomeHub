@@ -14,13 +14,12 @@
 // Pins
 const int led = 2; // pin for onboard LED
 const int flash = 0; // pin for "FLASH" button
-const int testIO = 5;
 #define PIN_WS2812B 16  // The ESP32 pin GPIO16 connected to WS2812B
 #define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
 //MQTT Config
 const char* mqtt_server = "192.168.50.234";
-const char* user = "tester";
+const char* user = "light1";
 const char* mqttpass = "password";
 const char* mainTopic = "light/1";
 const char* confirmTopic = "light/confirm";
@@ -178,12 +177,5 @@ void loop() {
     }
     mqtt.loop(); // Looks at messages constantly
     mqtt.subscribe(mainTopic); // Subscribes to prementioned topic
-  }
-  if (digitalRead(flash)) {
-    digitalWrite(led, HIGH);
-  } else {
-    digitalWrite(led, LOW);
-    mqtt.publish(mainTopic, "test positive");
-    delay(1000);
   }
 }
