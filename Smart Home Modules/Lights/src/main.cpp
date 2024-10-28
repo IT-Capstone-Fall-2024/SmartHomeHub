@@ -18,22 +18,25 @@ const int testIO = 5;
 #define PIN_WS2812B 16  // The ESP32 pin GPIO16 connected to WS2812B
 #define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
+//MQTT Config
+const char* mqtt_server = "192.168.50.234";
+const char* user = "tester";
+const char* mqttpass = "password";
+const char* mainTopic = "light/1";
+const char* confirmTopic = "light/confirm";
+const char* client = "light";
+
 // WiFi Config
 const char* ssid = "Smart-Home-AP";
 const char* wifiPassword = "checkout";
 WiFiClient espClient;
 PubSubClient mqtt(mqtt_server, 1883, 0, espClient);
 
-//MQTT Config
-const char* mqtt_server = "192.168.50.234";
-const char* user = "tester";
-const char* mqttpass = "password";
-const char* topic = "light1";
-const char* client = "TEST";
-
 // Stored Variables
-const char* status = "";
-const char* color = "";
+String strs[2];
+int state = 0;
+String color = "";
+
 
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
@@ -59,7 +62,32 @@ void reconnect() {
   }
 }
 
+String split(String s) {
+  int StringCount = 0;
+  while (s.length() > 0)
+  {
+    int index = s.indexOf(' ');
+    if (index == -1) // No space found
+    {
+      strs[StringCount++] = s;
+      break;
+    }
+    else
+    {
+      strs[StringCount++] = s.substring(0, index);
+      s = s.substring(index+1);
+    }
+  }
+  if (strs[0] == String("on")) {
+    state = 1;
+  }
+    if (strs[0] == String("off")) {
+    state = 0;
+  }
+  return strs[1];
+}
 
+// Method for translating string to color variables
 uint32_t getColor(String color) {
   if (color == "white") {
     return 16777216;
@@ -86,6 +114,7 @@ void Lights(int state, String color) {
   if (state == 0) {
     ws2812b.clear();
     ws2812b.show();
+    color = "";
   }
   if (state == 1) {
     ws2812b.clear();
@@ -102,12 +131,21 @@ String messageReceived(char* topic, byte* payload, unsigned int length) {
   }
   // Setup for if message comes, write to output pin
   Serial.println(message);
-  if (message == "on") {
-    Lights(1, "red");
+  color = split(message);
+  String stateHelp = "";
+  String confirm = "";
+  if (state == 1) {
+    Lights(1, color);
+    stateHelp = "On";
+    confirm = "Light 1 is " + stateHelp + " and " + color;
   }
-  if (message == "off") {
+  if (state == 0) {
     Lights(0, "");
+    stateHelp = "Off";
+    confirm = "Light 1 is " + stateHelp;
   }
+
+  mqtt.publish(confirmTopic, confirm.c_str());
   return message;
 }
 
@@ -137,13 +175,13 @@ void loop() {
       reconnect();
     }
     mqtt.loop(); // Looks at messages constantly
-    mqtt.subscribe(topic); // Subscribes to prementioned topic
+    mqtt.subscribe(mainTopic); // Subscribes to prementioned topic
   }
   if (digitalRead(flash)) {
     digitalWrite(led, HIGH);
   } else {
     digitalWrite(led, LOW);
-    mqtt.publish(topic, "test positive");
+    mqtt.publish(mainTopic, "test positive");
     delay(1000);
   }
 }
