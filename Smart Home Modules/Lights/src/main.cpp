@@ -24,7 +24,7 @@ const char* user = "tester";
 const char* mqttpass = "password";
 const char* mainTopic = "light/1";
 const char* confirmTopic = "light/confirm";
-const char* client = "light";
+const char* client = "light1";
 
 // WiFi Config
 const char* ssid = "Smart-Home-AP";
@@ -32,13 +32,12 @@ const char* wifiPassword = "checkout";
 WiFiClient espClient;
 PubSubClient mqtt(mqtt_server, 1883, 0, espClient);
 
-// Stored Variables
-String strs[2];
-int state = 0;
-String color = "";
+// Stored Variables // String array to overcome returning char array
+int state = 0; // universal state 
+String color = ""; // universal color
 
 
-
+// Initializes the lights as an object
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
 
 
@@ -62,8 +61,10 @@ void reconnect() {
   }
 }
 
+// Splits given message into array (strs[2]), sets the  and returns the color in a String variable
 String split(String s) {
   int StringCount = 0;
+  String strs[2];
   while (s.length() > 0)
   {
     int index = s.indexOf(' ');
@@ -90,7 +91,7 @@ String split(String s) {
 // Method for translating string to color variables
 uint32_t getColor(String color) {
   if (color == "white") {
-    return 16777216;
+    return 16777215;
   }
   if (color == "red") {
     return 16711680;
@@ -110,6 +111,7 @@ uint32_t getColor(String color) {
   return 0;
 }
 
+// Lights up or disables the LED strip based on input color and state
 void Lights(int state, String color) {
   if (state == 0) {
     ws2812b.clear();
@@ -123,7 +125,7 @@ void Lights(int state, String color) {
   }
 }
 
-//
+// Callback function for MQTT; This runs when any message is pushed to subscribed topic
 String messageReceived(char* topic, byte* payload, unsigned int length) {
   String message = "";
   for (unsigned int i=0; i < length; i++) {
