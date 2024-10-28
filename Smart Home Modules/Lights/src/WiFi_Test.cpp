@@ -2,6 +2,9 @@
 
 // #define CONNECTION_TIMEOUT 10
 
+// // Won't connect to RPI for some reason, works on normal AP
+// // Not channel
+// // Get AP?
 // const char* ssid = "rpi-hub";
 // const char* password = "checkout";
 

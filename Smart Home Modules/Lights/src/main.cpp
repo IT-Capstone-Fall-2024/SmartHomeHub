@@ -7,31 +7,33 @@
  */
 
 #include <Adafruit_NeoPixel.h>
-#include <WiFiUdp.h>
+#include <WiFi.h>
 #include <Arduino.h>
 #include <PubSubClient.h>
-#include <ESP8266mDNS.h>
 
 // Pins
 const int led = 2; // pin for onboard LED
 const int flash = 0; // pin for "FLASH" button
 const int testIO = 5;
-#define PIN_WS2812B 3  // The ESP32 pin GPIO16 connected to WS2812B
+#define PIN_WS2812B 16  // The ESP32 pin GPIO16 connected to WS2812B
 #define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
 // WiFi Config
-const char* ssid = "rpi-hub";
+const char* ssid = "Smart-Home-AP";
 const char* wifiPassword = "checkout";
+WiFiClient espClient;
+PubSubClient mqtt(mqtt_server, 1883, 0, espClient);
 
 //MQTT Config
-const char* mqtt_server = "10.42.0.1";
+const char* mqtt_server = "192.168.50.234";
 const char* user = "tester";
 const char* mqttpass = "password";
 const char* topic = "light1";
 const char* client = "TEST";
-WiFiClient espClient;
-PubSubClient mqtt(mqtt_server, 1883, 0, espClient);
 
+// Stored Variables
+const char* status = "";
+const char* color = "";
 
 
 Adafruit_NeoPixel ws2812b(NUM_PIXELS, PIN_WS2812B, NEO_GRB + NEO_KHZ800);
@@ -57,11 +59,27 @@ void reconnect() {
   }
 }
 
+
 uint32_t getColor(String color) {
-  if (color == "red") {
-    return 16777215;
+  if (color == "white") {
+    return 16777216;
   }
-  return 1111;
+  if (color == "red") {
+    return 16711680;
+  }
+  if (color == "green") {
+    return 65280;
+  }
+  if (color == "blue") {
+    return 255;
+  }
+  if (color == "orange") {
+    return 16747520;
+  }
+  if (color == "purple") {
+    return 16711935;
+  }
+  return 0;
 }
 
 void Lights(int state, String color) {

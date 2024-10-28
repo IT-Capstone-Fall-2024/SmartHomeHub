@@ -1,7 +1,9 @@
-// #include <WiFiUdp.h>
+// #include <WiFi.h>
 // #include <Arduino.h>
 // #include <PubSubClient.h>
-// #include <ESP8266mDNS.h>
+// #include <ESPmDNS.h>
+// #include <WiFiUdp.h>
+
 
 // // Pins
 // const int led = 2; // pin for onboard LED
@@ -10,7 +12,7 @@
 
 // // WiFi Config
 // const char* ssid = "rpi-hub";
-// const char* wifiPassword = "checkout";
+// const char* password = "checkout";
 
 // //MQTT Config
 // const char* mqtt_server = "10.42.0.1";
@@ -91,12 +93,16 @@
 //   pinMode(testIO, OUTPUT);
 //   int status = WL_IDLE_STATUS;
 //   Serial.println(get_wifi_status(status));
-//   WiFi.begin(ssid, wifiPassword);
-//   while (WiFi.status() != WL_CONNECTED) {
-//     Serial.println("Connection Failed");
-//     status = WiFi.status();
-//     Serial.println(get_wifi_status(status));
+//   Serial.begin(9600);
+//   Serial.println("Booting");
+//   Serial.println(F("Connecting to Wifi"));
+//   // Connects to WiFi
+//   WiFi.mode(WIFI_STA);
+//   WiFi.begin(ssid, password);
+//   while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+//     Serial.println("Connection Failed! Rebooting...");
 //     delay(5000);
+//     ESP.restart();
 //   }
 //   if (mqtt_server!="") {
 //     mqtt.setServer(mqtt_server, 1883);

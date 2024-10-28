@@ -8,10 +8,9 @@
 
 // #include <Adafruit_NeoPixel.h>
 // #include <Arduino.h>
-// #include <ESP8266mDNS.h>
 
 // // Pins
-// #define PIN_WS2812B 3  // The ESP32 pin GPIO16 connected to WS2812B
+// #define PIN_WS2812B 16  // The ESP32 pin GPIO16 connected to WS2812B
 // #define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
 // // WiFi Config
@@ -28,29 +27,51 @@
 // void loop() {
 //   ws2812b.clear();  // set all pixel colors to 'off'. It only takes effect if pixels.show() is called
 
-//   // turn pixels to green one-by-one with delay between each pixel
-//   for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {         // for each pixel
-//     ws2812b.setPixelColor(pixel, ws2812b.Color(0, 255, 0));  // it only takes effect if pixels.show() is called
-//     ws2812b.show();                                          // update to the WS2812B Led Strip
+// //   // turn pixels to green one-by-one with delay between each pixel
+// //   for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {         // for each pixel
+// //     ws2812b.setPixelColor(pixel, ws2812b.Color(0, 255, 0));  // it only takes effect if pixels.show() is called
+// //     ws2812b.show();                                          // update to the WS2812B Led Strip
 
-//     delay(500);  // 500ms pause between each pixel
-//   }
+// //     delay(500);  // 500ms pause between each pixel
+// //   }
 
-//   // turn off all pixels for two seconds
-//   ws2812b.clear();
-//   ws2812b.show();  // update to the WS2812B Led Strip
-//   delay(2000);     // 2 seconds off time
+// //   // turn off all pixels for two seconds
+// //   ws2812b.clear();
+// //   ws2812b.show();  // update to the WS2812B Led Strip
+// //   delay(2000);     // 2 seconds off time
 
-//   // turn on all pixels to red at the same time for two seconds
-//   for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {         // for each pixel
-//     ws2812b.setPixelColor(pixel, ws2812b.Color(255, 0, 0));  // it only takes effect if pixels.show() is called
-//   }
-//   ws2812b.show();  // update to the WS2812B Led Strip
-//   delay(1000);     // 1 second on time
+// //   // turn on all pixels to red at the same time for two seconds
+// //   for (int pixel = 0; pixel < NUM_PIXELS; pixel++) {         // for each pixel
+// //     ws2812b.setPixelColor(pixel, ws2812b.Color(255, 0, 0));  // it only takes effect if pixels.show() is called
+// //   }
+// //   ws2812b.show();  // update to the WS2812B Led Strip
+// //   delay(1000);     // 1 second on time
 
-//   // turn off all pixels for one seconds
-//   ws2812b.clear();
-//   ws2812b.show();  // update to the WS2812B Led Strip
-//   delay(1000);     // 1 second off time
-
+// //   // turn off all pixels for one seconds
+// //   ws2812b.clear();
+// //   ws2812b.show();  // update to the WS2812B Led Strip
+// //   delay(1000);     // 1 second off time
+//     ws2812b.fill(16777215, 0, 0); // white
+//     ws2812b.show();
+//     delay(3000);
+//     ws2812b.clear();
+//     ws2812b.fill(16711680, 0, 0); // red
+//     ws2812b.show();
+//     delay(3000);
+//     ws2812b.clear();
+//     ws2812b.fill(65280, 0, 0); // green
+//     ws2812b.show();
+//     delay(3000);
+//     ws2812b.clear();
+//     ws2812b.fill(255, 0, 0); // blue
+//     ws2812b.show();
+//     delay(3000);
+//     ws2812b.clear();
+//     ws2812b.fill(16747520, 0, 0); // orange
+//     ws2812b.show();
+//     delay(3000);
+//     ws2812b.clear();
+//     ws2812b.fill(16711935, 0, 0); // purple
+//     ws2812b.show();
+//     delay(3000);
 // }
