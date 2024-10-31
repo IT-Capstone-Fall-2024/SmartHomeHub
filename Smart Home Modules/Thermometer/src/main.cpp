@@ -4,7 +4,7 @@
 #include "soc/sens_reg.h"
 
 //MQTT Config
-const char* mqtt_server = "192.168.50.234";
+const char* mqtt_server = "192.168.50.233";
 const char* user = "temp";
 const char* mqttpass = "password";
 const char* mainTopic = "temp/1";
