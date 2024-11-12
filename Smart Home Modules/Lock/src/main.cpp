@@ -5,11 +5,11 @@
 
 //MQTT Config
 const char* mqtt_server = "192.168.90.234";
-const char* user = "light1";
+const char* user = "lock1";
 const char* mqttpass = "password";
-const char* mainTopic = "light/1";
-const char* confirmTopic = "light/confirm";
-const char* client = "light1";
+const char* mainTopic = "lock/1";
+const char* confirmTopic = "lock/confirm";
+const char* client = "lock1";
 
 // WiFi Config
 const char* ssid = "Smart-Home-AP";
