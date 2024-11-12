@@ -18,7 +18,7 @@ const int flash = 0; // pin for "FLASH" button
 #define NUM_PIXELS 60   // The number of LEDs (pixels) on WS2812B LED strip
 
 //MQTT Config
-const char* mqtt_server = "192.168.50.233";
+const char* mqtt_server = "192.168.90.234";
 const char* user = "light1";
 const char* mqttpass = "password";
 const char* mainTopic = "light/1";
