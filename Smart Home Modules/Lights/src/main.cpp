@@ -1,11 +1,3 @@
-/*
- * This ESP32 code is created by esp32io.com
- *
- * This ESP32 code is released in the public domain
- *
- * For more detail (instruction and wiring diagram), visit https://esp32io.com/tutorials/esp32-ws2812b-led-strip
- */
-
 #include <Adafruit_NeoPixel.h>
 #include <WiFi.h>
 #include <Arduino.h>
