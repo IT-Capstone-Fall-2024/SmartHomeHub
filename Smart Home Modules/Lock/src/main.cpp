@@ -71,7 +71,6 @@ String messageReceived(char* topic, byte* payload, unsigned int length) {
   }
   if (degree == 90) {
     servo.write(degree);
-    pubMessage = "Lock 1 is now locked";
     state = degree;
     mqtt.publish(confirmTopic, "Lock 1 is now locked");
   }
@@ -80,6 +79,11 @@ String messageReceived(char* topic, byte* payload, unsigned int length) {
     state = degree;
     mqtt.publish(confirmTopic, "Lock 1 is now unlocked");
   }
+  delay(8000);
+  degree = 90;
+  servo.write(degree);
+  state = degree;
+  mqtt.publish(confirmTopic, "Lock 1 is now locked");
   return message;
 }
 
